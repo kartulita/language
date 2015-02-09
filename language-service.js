@@ -37,11 +37,11 @@
 						return null;
 					}
 					/* Try locale */
-					var string = locale in strings ? strings[locale][id] : null;
+					var string = strings[locale] && strings[locale][id];
 					/* Try language */
 					if (!string && locale.length > 2) {
 						var lang = locale.substr(0, 2);
-						string = lang in strings ? strings[lang][id] : null;
+						string = strings[lang] && strings[lang][id];
 					}
 					/* Warn if not found */
 					if (!string) {
