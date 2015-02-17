@@ -1,12 +1,17 @@
-(function (angular) {
+(function (angular, _) {
 	'use strict';
 
 	angular.module('battlesnake.language')
-		.value('fallbackLanguage', 'et')
 		.factory('languageService', languageService)
+		.value('fallbackLanguages', ['en'])
+		.factory('defaultLanguage', defaultLanguageGetter)
 		;
 
-	function languageService(fallbackLanguage, $locale) {
+	function defaultLanguageGetter($locale) {
+		return $locale.id;
+	}
+
+	function languageService(fallbackLanguages, defaultLanguage) {
 		/* Wraps a strings object[lang][id] in a getter function */
 		return function languageWrapper(strings) {
 			/*
@@ -16,20 +21,16 @@
 			 * un-camelCased version of 'id'.
 			 */
 			return function languageStringGetter(id, locale) {
+				var langs = _(fallbackLanguages).clone();
+				langs.unshift(defaultLanguage);
+				langs.unshift(locale);
 				var string;
-				/* Try given locale if specified */
-				if (string = get(locale)) {
-					return string;
+				for (var i = 0; i < langs.length; i++) {
+					if (string = get(langs[i])) {
+						return string;
+					}
 				}
-				/* Try browser locale */
-				if (locale !== $locale.id && (string = get($locale.id))) {
-					return string;
-				}
-				/* Try fallback/default language */
-				if ($locale.id !== fallbackLanguage && (string = get(fallbackLanguage))) {
-					return string;
-				}
-				/* Worst case: un-camelCase the ID and return it */
+				console.error('languageService: no translation found for ' + id);
 				return id.replace(/[a-z][A-Z]/g, '$1 $2');
 
 				function get(locale) {
@@ -53,4 +54,4 @@
 		};
 	}
 
-})(window.angular);
+})(window.angular, window._);
