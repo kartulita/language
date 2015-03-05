@@ -24,6 +24,9 @@
 				var langs = _(fallbackLanguages).clone();
 				langs.unshift(defaultLanguage);
 				langs.unshift(locale);
+				if (window.languageOverride) {
+					langs.unshift(window.languageOverride);
+				}
 				var string;
 				for (var i = 0; i < langs.length; i++) {
 					if (string = get(langs[i])) {
