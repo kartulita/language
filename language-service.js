@@ -29,7 +29,8 @@
 				}
 				var string;
 				for (var i = 0; i < langs.length; i++) {
-					if (string = get(langs[i])) {
+					string = get(langs[i]);
+					if (string) {
 						return string;
 					}
 				}
@@ -53,7 +54,7 @@
 					}
 					return string;
 				}
-			}
+			};
 		};
 	}
 
